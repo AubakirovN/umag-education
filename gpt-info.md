@@ -5,7 +5,7 @@ Since you’re using Laravel 12 in the backend, you can implement the JSON-based
 1. Migration for test_questions Table
 
 Modify your Laravel migration to support JSON storage.
-
+```php
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -31,14 +31,14 @@ class CreateTestQuestionsTable extends Migration
     }
 }
 
-
+```
 
 ⸻
 
 2. Migration for user_answers Table
 
 We store user responses in JSON format.
-
+```php
 class CreateUserAnswersTable extends Migration
 {
     public function up()
@@ -61,14 +61,14 @@ class CreateUserAnswersTable extends Migration
     }
 }
 
-
+```
 
 ⸻
 
 3. Laravel Models
 
 TestQuestion Model
-
+```php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -86,12 +86,12 @@ class TestQuestion extends Model
     ];
 }
 
-
+```
 
 ⸻
 
 UserAnswer Model
-
+```php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -107,7 +107,7 @@ class UserAnswer extends Model
         'selected_answers' => 'array',
     ];
 }
-
+```
 
 
 ⸻
@@ -115,7 +115,7 @@ class UserAnswer extends Model
 4. Storing User Answers
 
 Frontend will send a POST request with selected answers:
-
+```js
 {
   "user_id": 123,
   "test_id": 10,
@@ -124,9 +124,9 @@ Frontend will send a POST request with selected answers:
     { "question_id": 2, "selected_answers": { "B": "Option 2", "C": "Option 3" } }
   ]
 }
-
+```
 Controller Method to Save Answers
-
+```php
 use App\Models\UserAnswer;
 use Illuminate\Http\Request;
 
@@ -149,7 +149,7 @@ class TestController extends Controller
     }
 }
 
-
+```
 
 ⸻
 
@@ -158,7 +158,7 @@ class TestController extends Controller
 We compare user_answers.selected_answers with test_questions.correct_answers.
 
 Controller Method for Evaluation
-
+```php
 use App\Models\UserAnswer;
 use App\Models\TestQuestion;
 
@@ -192,14 +192,14 @@ class TestController extends Controller
     }
 }
 
-
+```
 
 ⸻
 
 6. Fetching Test Results
 
 Frontend can call:
-
+```js
 GET /api/evaluate-test/{user_id}
 
 Example API Response
@@ -210,7 +210,7 @@ Example API Response
   "total_questions": 10,
   "score": "80%"
 }
-
+```
 
 
 ⸻
