@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use App\Models\PhoneRole;
 
 class UserController extends Controller
 {
@@ -22,13 +23,23 @@ class UserController extends Controller
                     ->numbers()
                     ->symbols()
                     ->uncompromised()
-            ]
+            ],
+            'phone' => ['required']
         ]);
+
+        $phoneRole = PhoneRole::where('phone', $credentials['phone'])->first();
+
+        if (!$phoneRole) {
+            return response()->json([
+                'message' => 'Номер телефона не найден.'
+            ]);
+        }
 
         $user = User::create([
             'name' => $credentials['name'],
             'email' => $credentials['email'],
             'password' => Hash::make($credentials['password']),
+            'role' => $phoneRole->role
         ]);
 
         return response()->json([
